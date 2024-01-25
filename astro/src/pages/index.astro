@@ -1,5 +1,93 @@
 ---
-import Hero from '../components/Hero.astro';
+import Hero from "../components/Hero.astro";
+import PlayerTrophy from "../components/PlayerTrophy.astro";
+
+interface Clan {
+	clan: string;
+	members: string[];
+	trophies: number;
+}
+
+interface Player {
+	name: string;
+	clan: string;
+	trophies: number;
+	kills: number;
+	deaths: number;
+}
+
+/*
+Nicolai - 1
+Bradford - 1
+Shen - 1
+DeadVampireGame - 1
+George - 1
+Umpathud - 1
+Dz - 2
+Juicy - 2
+Zekimar - 2
+Kraydos - 1
+Shakes - 1
+Rimus - 1
+Electro - 2
+Astarisc - 1
+Tleilax - 1
+Roroftw - 1
+Loontrain - 2
+Chapenstien - 2
+Computer - 1 
+*/
+
+const playerData: Player[] = [
+	// {"name": "Nicolai", "clan": "TODO", "trophies": 1, "kills": 0, "deaths": 0},
+	// {"name": "Bradford", "clan": "TODO", "trophies": 1, "kills": 0, "deaths": 0},
+	// {"name": "Shen", "clan": "TODO", "trophies": 1, "kills": 0, "deaths": 0},
+	// {"name": "DeadVampireGame", "clan": "TODO", "trophies": 1, "kills": 0, "deaths": 0},
+	// {"name": "George", "clan": "TODO", "trophies": 1, "kills": 0, "deaths": 0},
+	// {"name": "Umpathud", "clan": "TODO", "trophies": 1, "kills": 0, "deaths": 0},
+	{"name": "Dz", "clan": "idkman", "trophies": 2, "kills": 0, "deaths": 0},
+	{"name": "Juicy", "clan": "idkman", "trophies": 2, "kills": 0, "deaths": 0},
+	{name: "Zekimar", clan: "yep", trophies: 2, kills: 0, deaths: 0},
+	// {"name": "Kraydos", "clan": "TODO", "trophies": 1, "kills": 0, "deaths": 0},
+	// {"name": "Shakes", "clan": "TODO", "trophies": 1, "kills": 0, "deaths": 0},
+	// {"name": "Rimus", "clan": "TODO", "trophies": 1, "kills": 0, "deaths": 0},
+	// {"name": "Electro", "clan": "TODO", "trophies": 2, "kills":0, "deaths": 0},
+	{name: "Astarisc", clan: "something", trophies: 1, kills: 0, deaths: 0},
+	{name: "Tleilax", clan: "yep", trophies: 1, kills: 0, deaths: 0},
+	{name: "Roroftw", clan: "something", trophies: 1, kills: 0, deaths: 0},
+	// {"name": "Loontrain", "clan": "TODO", "trophies": 2, "kills": 0, "deaths": 0},
+	// {"name": "Chapenstien", "clan": "TODO", "trophies": 2, "kills": 0, "deaths": 0},
+	// {"name": "Computer", "clan": "TODO", "trophies": 1, "kills": 0, "deaths": 0},
+	{name: "hiCT", clan: "", trophies: 0, kills: 0, deaths: 0}
+
+] 
+
+const clans: { [key: string]: Clan } = {};
+const solos: Array<Player> = [];
+
+playerData.forEach((player) => {
+	if (player.clan in clans) {
+		clans[player.clan].members.push(player.name);
+		clans[player.clan].trophies += player.trophies;
+	}
+	else if (player.clan !== "") {
+		clans[player.clan] = {
+			clan: player.clan,
+			members: [player.name],
+			trophies: player.trophies,
+		};
+	}
+	else{
+		solos.push(player);
+	}
+});
+const clanArray: Array<Clan> = Object.values(clans)
+
+// type HasTrophies = Player | Clan;
+
+
+const leaderBoardData: Array<Player | Clan> = [...clanArray, ...solos].sort((a, b) => b.trophies - a.trophies);
+console.log(leaderBoardData);
 ---
 
 <html lang="en">
@@ -14,23 +102,15 @@ import Hero from '../components/Hero.astro';
 		<Hero />
 		<!-- trophy section -->
 		<div id="Trophys">
-			<div class="hero bg-base-200">
-				<div class="hero-content flex-col lg:flex-row">
-					<div class="avatar">
-						<div class="mask mask-hexagon">
-							<img
-								src="public/vampires1.webp"
-								class="max-w-sm rounded-lg shadow-2xl"
-							/>
-						</div>
-					</div>
-					<div>
-						<h1 class="text-5xl font-bold">Dz and Juicy - 4🏆</h1>
-						<h2 class="text-4xl font-bold">Dz:</h2>
-						<h2 class="text-4xl font-bold">Juicy:</h2>
-					</div>
-				</div>
-			</div>
+		{
+			leaderBoardData.map((row) => {
+				const isClan = "members" in row;
+				const names =  isClan ?  row.members : [row.name];
+				const totalTrophies = row.trophies;
+				return <PlayerTrophy  names={names} totalTrophies={totalTrophies} playerData={playerData}/>
+			})
+		}
+			<!-- <PlayerTrophy playerData={playerData} clanArray={clanArray} solos={solos} /> -->
 		</div>
 	</body>
 
@@ -59,24 +139,3 @@ import Hero from '../components/Hero.astro';
 		</nav>
 	</footer>
 </html>
-
-<!-- 
-Dz - 2
-Juicy - 2
-Zekimar - 2
-Nicolai - 1
-Bradford - 1
-Shen - 1
-DeadVampireGame - 1
-George - 1
-Umpathud - 1
-Kraydos - 1
-Shakes - 1
-Rimus - 1
-Electro - 2
-Astarisc - 1
-Tleilax - 1
-Roroftw - 1
-Loontrain - 2
-Chapenstien - 2
-Computer - 1  -->
