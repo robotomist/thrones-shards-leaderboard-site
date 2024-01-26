@@ -1,5 +1,5 @@
 ---
-import Hero from "../components/Hero.astro";
+import ThroneHero from "../components/ThroneHero.astro";
 import LeaderBoardRow from "../components/LeaderboardRow.astro";
 
 interface Clan {
@@ -98,7 +98,7 @@ const leaderBoardData: Array<Player | Clan> = [...clanArray, ...solos].sort((a, 
 	</head>
 
 	<body>
-		<Hero />
+		<ThroneHero />
 		<!-- trophy section -->
 		<div id="Trophys">
 		{
