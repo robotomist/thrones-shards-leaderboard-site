@@ -1,6 +1,6 @@
 ---
 import Hero from "../components/Hero.astro";
-import PlayerTrophy from "../components/PlayerTrophy.astro";
+import LeaderBoardRow from "../components/LeaderboardRow.astro";
 
 interface Clan {
 	clan: string;
@@ -59,7 +59,6 @@ const playerData: Player[] = [
 	// {"name": "Chapenstien", "clan": "TODO", "trophies": 2, "kills": 0, "deaths": 0},
 	// {"name": "Computer", "clan": "TODO", "trophies": 1, "kills": 0, "deaths": 0},
 	{name: "hiCT", clan: "", trophies: 0, kills: 0, deaths: 0}
-
 ] 
 
 const clans: { [key: string]: Clan } = {};
@@ -87,7 +86,7 @@ const clanArray: Array<Clan> = Object.values(clans)
 
 
 const leaderBoardData: Array<Player | Clan> = [...clanArray, ...solos].sort((a, b) => b.trophies - a.trophies);
-console.log(leaderBoardData);
+// console.log(leaderBoardData);
 ---
 
 <html lang="en">
@@ -107,10 +106,17 @@ console.log(leaderBoardData);
 				const isClan = "members" in row;
 				const names =  isClan ?  row.members : [row.name];
 				const totalTrophies = row.trophies;
-				return <PlayerTrophy  names={names} totalTrophies={totalTrophies} playerData={playerData}/>
+				const clanData = [];
+				for (const name of names) {
+					const player = playerData.find((player) => player.name === name);
+					if (player) {
+						clanData.push(player);
+					}
+				}
+				return <LeaderBoardRow names={names} totalTrophies={totalTrophies} clanData={clanData}/>
 			})
 		}
-			<!-- <PlayerTrophy playerData={playerData} clanArray={clanArray} solos={solos} /> -->
+			<!-- <LeaderBoardRow playerData={playerData} clanArray={clanArray} solos={solos} /> -->
 		</div>
 	</body>
 

@@ -1,8 +1,12 @@
 ---
 import Stats from "./Stats.astro";
-const { names, totalTrophies } = Astro.props;
-let nameTitle = names.length == 1 ? names[0] : names.join(", ","")
-nameTitle = nameTitle + `- ${totalTrophies}🏆`
+const { names, totalTrophies, clanData} = Astro.props;
+const isSolo = names.length == 1;
+let nameTitle = isSolo ? names[0] : names.join(", ","")
+nameTitle = nameTitle + ` - ${totalTrophies}🏆`
+const kills = clanData.reduce((acc: any, player: any) => acc + player.kills, 0);
+const deaths = clanData.reduce((acc: any, player: any) => acc + player.deaths, 0);
+const nameToDisplay = isSolo ? names[0] : clanData[0].clan;
 ---
 
 
@@ -18,9 +22,9 @@ nameTitle = nameTitle + `- ${totalTrophies}🏆`
                 />
             </div>
         </div>
-        <div class="">
+        <div class="grow">
             <h1 class="text-5xl font-bold p-8">{nameTitle}</h1>
-            <Stats/>
+            <Stats name={nameToDisplay} kills={kills} deaths={deaths}/>
         </div>
     </div>
 </div>
